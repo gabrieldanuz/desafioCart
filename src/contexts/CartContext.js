@@ -18,7 +18,6 @@ function CartProvider({ children }) {
 
       setCart(cartList)
       return
-      console.log('Esse item já existe')
     }
 
     let data = {
@@ -33,12 +32,31 @@ function CartProvider({ children }) {
     console.log([...cart, data])
   }
 
+  function removeItemCart(product) {
+    const indexItem = cart.findIndex(item => item.id === product.id)
+
+    if (cart[indexItem]?.amount > 1) {
+      let cartList = cart
+
+      cartList[indexItem].amount = cartList[indexItem].amount - 1
+      cartList[indexItem].total =
+        cartList[indexItem].total - cartList[indexItem].price
+
+      setCart(cartList)
+      return
+    }
+
+    const removeItem = cart.filter(item => item.id !== product.id)
+    setCart(removeItem)
+  }
+
   //Add no carrinho
   return (
     <CartContext.Provider
       value={{
         cart,
-        addItemCart
+        addItemCart,
+        removeItemCart
       }}
     >
       {children}
